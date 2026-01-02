@@ -7,8 +7,8 @@ M.defaults = {
   -- Window settings
   window = {
     position = "bottom-right", -- "top-left", "top-right", "bottom-left", "bottom-right"
-    width = 40,
-    height = 12,
+    width = 32,
+    height = 10,
     border = "rounded", -- "none", "single", "double", "rounded", "solid", "shadow"
     winblend = 0, -- Transparency (0-100)
     zindex = 50,
