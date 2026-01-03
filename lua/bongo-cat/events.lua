@@ -12,6 +12,7 @@ local M = {}
 M.state = {
   augroup = nil,
   idle_timer = nil,
+  sleep_timer = nil, -- For sleepy animation after long idle
   combo_timer = nil,
   event_timer = nil, -- For temporary event animations
 }
@@ -37,6 +38,11 @@ local function on_keystroke()
     M.state.idle_timer:stop()
   end
 
+  -- Reset sleep timer
+  if M.state.sleep_timer then
+    M.state.sleep_timer:stop()
+  end
+
   M.state.idle_timer = vim.defer_fn(function()
     if window.is_visible() then
       -- Go back to idle
@@ -48,6 +54,13 @@ local function on_keystroke()
       else
         window.render(animation.get_idle_frame())
       end
+
+      -- Start sleep timer for longer idle
+      M.state.sleep_timer = vim.defer_fn(function()
+        if window.is_visible() then
+          window.render(animation.get_event_frame("sleep"))
+        end
+      end, config.get("animation.sleep_timeout") - config.get("animation.idle_timeout"))
     end
   end, config.get("animation.idle_timeout"))
 end
@@ -194,6 +207,11 @@ function M.cleanup()
   if M.state.event_timer then
     M.state.event_timer:stop()
     M.state.event_timer = nil
+  end
+
+  if M.state.sleep_timer then
+    M.state.sleep_timer:stop()
+    M.state.sleep_timer = nil
   end
 end
 

@@ -7,7 +7,7 @@ M.defaults = {
   -- Window settings
   window = {
     position = "bottom-right", -- "top-left", "top-right", "bottom-left", "bottom-right"
-    width = 32,
+    width = 45,
     height = 10,
     border = "rounded", -- "none", "single", "double", "rounded", "solid", "shadow"
     winblend = 0, -- Transparency (0-100)
@@ -18,6 +18,7 @@ M.defaults = {
   animation = {
     fps = 30, -- Frames per second for animations
     idle_timeout = 2000, -- Ms before cat goes idle
+    sleep_timeout = 30000, -- Ms before cat falls asleep (30 seconds)
     combo_decay = 1000, -- Ms before combo resets
   },
 
