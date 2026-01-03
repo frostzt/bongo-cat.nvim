@@ -65,6 +65,7 @@ local function create_buffer()
 end
 
 -- Open the floating window
+-- Open the floating window
 function M.open()
 	if M.state.visible and M.state.win and vim.api.nvim_win_is_valid(M.state.win) then
 		return
@@ -87,22 +88,13 @@ function M.open()
 	M.state.win = vim.api.nvim_open_win(buf, false, win_opts)
 	M.state.visible = true
 
-	-- Window options
 	vim.api.nvim_win_set_option(M.state.win, "winblend", config.get("window.winblend"))
 	vim.api.nvim_win_set_option(M.state.win, "winhighlight", "Normal:BongoCatNormal,FloatBorder:BongoCatBorder")
-	vim.api.nvim_win_set_option(win, "wrap", false)
-	vim.api.nvim_win_set_option(win, "signcolumn", "no")
-	vim.api.nvim_win_set_option(win, "number", false)
-	vim.api.nvim_win_set_option(win, "relativenumber", false)
-	vim.api.nvim_win_set_option(win, "cursorline", false)
-
-	-- And ensure window is wide enough
-	local win_config = {
-		relative = "editor",
-		width = 80, -- Increase if needed
-		height = 10,
-		-- ... rest of config
-	}
+	vim.api.nvim_win_set_option(M.state.win, "wrap", false)
+	vim.api.nvim_win_set_option(M.state.win, "signcolumn", "no")
+	vim.api.nvim_win_set_option(M.state.win, "number", false)
+	vim.api.nvim_win_set_option(M.state.win, "relativenumber", false)
+	vim.api.nvim_win_set_option(M.state.win, "cursorline", false)
 
 	-- Set initial frame
 	M.render(animation.get_frame("idle"))
@@ -137,11 +129,20 @@ function M.render(frame)
 	local width = config.get("window.width")
 
 	for _, line in ipairs(frame) do
-		-- Pad or truncate lines to fit width
-		if #line < width then
-			line = line .. string.rep(" ", width - #line)
-		elseif #line > width then
-			line = line:sub(1, width)
+		-- Use strdisplaywidth for Unicode characters
+		local display_width = vim.fn.strdisplaywidth(line)
+
+		if display_width < width then
+			-- Pad with spaces
+			line = line .. string.rep(" ", width - display_width)
+		elseif display_width > width then
+			-- Truncate carefully (this is tricky with multibyte chars)
+			-- For now, just use the line as-is if it's close
+			if display_width - width < 3 then
+				-- Close enough, use as-is
+			else
+				line = vim.fn.strcharpart(line, 0, width)
+			end
 		end
 		table.insert(lines, line)
 	end
