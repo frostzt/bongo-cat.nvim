@@ -151,7 +151,3 @@ bongo.play("idle")
 
 - Inspired by the [Bongo Cat](https://bongo.cat/) meme
 - ASCII art created with love
-
-## License
-
-MIT
