@@ -165,10 +165,13 @@ function M.setup()
   vim.api.nvim_create_autocmd("DiagnosticChanged", {
     group = M.state.augroup,
     callback = function()
-      local diagnostics = vim.diagnostic.get(0, { severity = vim.diagnostic.severity.ERROR })
-      if #diagnostics > 0 then
-        on_error()
-      end
+      -- Schedule to avoid "not allowed to change text" errors during certain autocmd contexts
+      vim.schedule(function()
+        local diagnostics = vim.diagnostic.get(0, { severity = vim.diagnostic.severity.ERROR })
+        if #diagnostics > 0 then
+          on_error()
+        end
+      end)
     end,
   })
 
