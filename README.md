@@ -1,5 +1,7 @@
 # bongo-cat.nvim
 
+https://github.com/user-attachments/assets/fb1ffa74-2d34-4675-983e-eb5111cf4461
+
 An adorable Bongo Cat that plays along with your keystrokes in Neovim!
 
 ![Neovim](https://img.shields.io/badge/NeoVim-%2357A143.svg?&style=for-the-badge&logo=neovim&logoColor=white)
